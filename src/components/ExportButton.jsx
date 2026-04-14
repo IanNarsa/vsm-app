@@ -33,7 +33,7 @@ export default function ExportButton({ canvasRef }) {
           canvas.width = img.width;
           canvas.height = img.height;
           const ctx = canvas.getContext('2d');
-          
+
           if (!ctx) {
             reject(new Error('Failed to get canvas context'));
             return;
@@ -41,7 +41,7 @@ export default function ExportButton({ canvasRef }) {
 
           // 1. Draw original captured image
           ctx.drawImage(img, 0, 0);
-          
+
           // 2. Add Timestamp (Top Right Corner)
           // Scale font size based on image width for responsiveness
           const fontSize = Math.max(14, Math.floor(canvas.width / 80));
@@ -49,7 +49,7 @@ export default function ExportButton({ canvasRef }) {
           ctx.fillStyle = 'rgba(31, 41, 55, 0.8)'; // Dark gray
           ctx.textAlign = 'right';
           ctx.fillText(timestamp, canvas.width - (canvas.width * 0.02), fontSize + (canvas.height * 0.02));
-          
+
           // 3. Add Watermark (Diagonal Center)
           ctx.save();
           ctx.translate(canvas.width / 2, canvas.height / 2);
@@ -58,9 +58,9 @@ export default function ExportButton({ canvasRef }) {
           ctx.font = `bold ${watermarkSize}px Inter, Arial, sans-serif`;
           ctx.fillStyle = 'rgba(156, 163, 175, 0.12)'; // Subtle gray
           ctx.textAlign = 'center';
-          ctx.fillText('vsm-lean.com', 0, 0);
+          ctx.fillText('flow-lean.com', 0, 0);
           ctx.restore();
-          
+
           resolve(canvas.toDataURL('image/png', 1.0));
         } catch (err) {
           reject(err);
@@ -79,18 +79,18 @@ export default function ExportButton({ canvasRef }) {
         if (node.classList && node.classList.contains('no-export')) return false;
         return true;
       };
-      
+
       // Capture the VSM map area
-      const originalDataUrl = await htmlToImage.toPng(canvasRef.current, { 
-        pixelRatio: 2, 
+      const originalDataUrl = await htmlToImage.toPng(canvasRef.current, {
+        pixelRatio: 2,
         filter,
-        backgroundColor: '#ffffff' 
+        backgroundColor: '#ffffff'
       });
-      
+
       // Process with watermark and timestamp
       const timestamp = formatTimestamp();
       const processedDataUrl = await addOverlayToImage(originalDataUrl, timestamp);
-      
+
       const link = document.createElement('a');
       link.download = `vsm-map-${new Date().getTime()}.png`;
       link.href = processedDataUrl;
@@ -111,35 +111,35 @@ export default function ExportButton({ canvasRef }) {
         if (node.classList && node.classList.contains('no-export')) return false;
         return true;
       };
-      
+
       // Capture and process (consistent with PNG)
-      const originalDataUrl = await htmlToImage.toPng(canvasRef.current, { 
-        pixelRatio: 2, 
+      const originalDataUrl = await htmlToImage.toPng(canvasRef.current, {
+        pixelRatio: 2,
         filter,
         backgroundColor: '#ffffff'
       });
-      
+
       const timestamp = formatTimestamp();
       const processedDataUrl = await addOverlayToImage(originalDataUrl, timestamp);
-      
+
       // Create landscape PDF
       const pdf = new jsPDF('l', 'mm', 'a4');
       const imgProps = pdf.getImageProperties(processedDataUrl);
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-      
+
       // Handle page overflow if the VSM is very tall
       const pageHeight = pdf.internal.pageSize.getHeight();
       let finalWidth = pdfWidth;
       let finalHeight = pdfHeight;
-      
+
       if (pdfHeight > pageHeight - 20) {
         finalHeight = pageHeight - 20;
         finalWidth = (imgProps.width * finalHeight) / imgProps.height;
       }
-      
+
       const xOffset = (pdfWidth - finalWidth) / 2;
-      
+
       pdf.addImage(processedDataUrl, 'PNG', xOffset, 10, finalWidth, finalHeight);
       pdf.save(`vsm-map-${new Date().getTime()}.pdf`);
     } catch (error) {
