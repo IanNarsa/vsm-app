@@ -1,4 +1,5 @@
 import React from "react";
+import { trackBottleneckClick, trackDrilldown } from "../utils/analytics";
 
 const ProcessCard = ({ process, isBottleneck, onClick }) => {
   const { name, isVA, ct, wt, hasChildren } = process;
@@ -15,9 +16,20 @@ const ProcessCard = ({ process, isBottleneck, onClick }) => {
     ? "ring-4 ring-orange-500 shadow-lg shadow-orange-200 scale-105"
     : "hover:shadow-md";
 
+  const handleCardClick = () => {
+    if (isBottleneck) {
+      trackBottleneckClick({ processName: name, processCT: ct });
+    }
+
+    if (hasChildren && typeof onClick === 'function') {
+      trackDrilldown({ processName: name, action: 'view_details' });
+      onClick(process);
+    }
+  };
+
   return (
     <div
-      onClick={() => hasChildren && onClick(process)}
+      onClick={handleCardClick}
       className={`relative flex flex-col w-48 rounded-lg border-2 ${borderColor} ${bgColor} ${bottleneckClasses} transition-all duration-300 ${
         hasChildren ? "cursor-pointer hover:scale-105" : "cursor-default"
       }`}

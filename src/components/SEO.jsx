@@ -13,7 +13,7 @@ import { Helmet } from 'react-helmet-async';
 export default function SEO({
   title = 'FlowLean — Online VSM Builder',
   description = 'FlowLean is a free online Value Stream Mapping (VSM) tool for Lean Manufacturing teams. Visualize process flows, calculate Lead Time, VA Ratio, and identify waste in real time.',
-  image = 'https://flow-lean.com/og-image.png',
+  image = 'https://flow-lean.com/android-chrome-192x192.png',
   url = 'https://flow-lean.com/',
   type = 'website',
 }) {

@@ -1,5 +1,11 @@
 import React from 'react';
 import { Plus, Trash2 } from 'lucide-react';
+import {
+  trackAddProcess,
+  trackEditProcess,
+  trackDeleteProcess,
+  trackDrilldown,
+} from '../utils/analytics';
 
 export default function FormInput({ processes, addProcess, removeProcess, updateProcess, handleManageChildren }) {
   return (
@@ -12,9 +18,12 @@ export default function FormInput({ processes, addProcess, removeProcess, update
             Process Steps
           </h2>
         </div>
-        <div className="w-full">
+         <div className="w-full">
           <button
-            onClick={addProcess}
+            onClick={() => {
+              addProcess();
+              trackAddProcess(processes.length + 1);
+            }}
             className="flex items-center justify-center gap-1.5 bg-blue-600 text-white w-full py-2.5 rounded-md hover:bg-blue-700 transition text-sm font-medium shadow-sm"
           >
             <Plus size={18} />
@@ -33,7 +42,12 @@ export default function FormInput({ processes, addProcess, removeProcess, update
               <input
                 type="text"
                 value={process.name}
-                onChange={(e) => updateProcess(process.id, 'name', e.target.value)}
+                onChange={(e) => {
+                  updateProcess(process.id, 'name', e.target.value);
+                }}
+                onBlur={(e) => {
+                  trackEditProcess({ processName: e.target.value, field: 'name', value: e.target.value });
+                }}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 placeholder="e.g. Assembly"
               />
@@ -42,7 +56,14 @@ export default function FormInput({ processes, addProcess, removeProcess, update
             {/* Row 2: Drill Down / Add Detail Flow */}
             <div className="w-full">
               <button
-                onClick={() => handleManageChildren(process)}
+                onClick={() => {
+                  handleManageChildren(process);
+                  trackDrilldown({
+                    processName: process.name,
+                    action: process.hasChildren ? 'edit' : 'create',
+                    layerDepth: 0,
+                  });
+                }}
                 className={`w-full px-2.5 py-2 text-xs font-bold rounded-md border transition-colors shadow-sm text-center
                   ${process.hasChildren
                     ? 'bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100'
@@ -66,6 +87,9 @@ export default function FormInput({ processes, addProcess, removeProcess, update
                     const val = e.target.value;
                     updateProcess(process.id, 'ct', val === '' ? 0 : parseInt(val, 10));
                   }}
+                  onBlur={(e) => {
+                    trackEditProcess({ processName: process.name, field: 'ct', value: e.target.value });
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-mono"
                 />
               </div>
@@ -81,6 +105,9 @@ export default function FormInput({ processes, addProcess, removeProcess, update
                     const val = e.target.value;
                     updateProcess(process.id, 'wt', val === '' ? 0 : parseInt(val, 10));
                   }}
+                  onBlur={(e) => {
+                    trackEditProcess({ processName: process.name, field: 'wt', value: e.target.value });
+                  }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-mono"
                 />
               </div>
@@ -94,7 +121,10 @@ export default function FormInput({ processes, addProcess, removeProcess, update
                     type="checkbox"
                     id={`va-${process.id}`}
                     checked={process.isVA}
-                    onChange={(e) => updateProcess(process.id, 'isVA', e.target.checked)}
+                    onChange={(e) => {
+                      updateProcess(process.id, 'isVA', e.target.checked);
+                      trackEditProcess({ processName: process.name, field: 'is_va', value: e.target.checked });
+                    }}
                     className="flex-shrink-0 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
                   />
                 </div>
@@ -104,7 +134,14 @@ export default function FormInput({ processes, addProcess, removeProcess, update
               </div>
 
               <button
-                onClick={() => removeProcess(process.id)}
+                onClick={() => {
+                  removeProcess(process.id);
+                  trackDeleteProcess({
+                    processName: process.name,
+                    processIndex: index,
+                    totalProcesses: processes.length - 1,
+                  });
+                }}
                 className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
                 title="Remove Process"
                 disabled={processes.length === 1}

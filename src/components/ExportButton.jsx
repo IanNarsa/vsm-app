@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import * as htmlToImage from 'html-to-image';
 import { jsPDF } from 'jspdf';
 import { FileImage, FileText } from 'lucide-react';
+import { trackExportPNG, trackExportPDF } from '../utils/analytics';
 
-export default function ExportButton({ canvasRef }) {
+export default function ExportButton({ canvasRef, totalProcesses }) {
   const [isExporting, setIsExporting] = useState(false);
 
   // Helper to format timestamp in English (en-US)
@@ -75,6 +76,9 @@ export default function ExportButton({ canvasRef }) {
     if (!canvasRef.current || isExporting) return;
     try {
       setIsExporting(true);
+      
+      trackExportPNG(totalProcesses);
+
       const filter = (node) => {
         if (node.classList && node.classList.contains('no-export')) return false;
         return true;
@@ -94,7 +98,9 @@ export default function ExportButton({ canvasRef }) {
       const link = document.createElement('a');
       link.download = `vsm-map-${new Date().getTime()}.png`;
       link.href = processedDataUrl;
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
     } catch (error) {
       console.error('Error exporting PNG:', error);
       alert('Failed to export PNG. Please try again.');
@@ -107,6 +113,9 @@ export default function ExportButton({ canvasRef }) {
     if (!canvasRef.current || isExporting) return;
     try {
       setIsExporting(true);
+
+      trackExportPDF(totalProcesses);
+
       const filter = (node) => {
         if (node.classList && node.classList.contains('no-export')) return false;
         return true;
@@ -142,6 +151,7 @@ export default function ExportButton({ canvasRef }) {
 
       pdf.addImage(processedDataUrl, 'PNG', xOffset, 10, finalWidth, finalHeight);
       pdf.save(`vsm-map-${new Date().getTime()}.pdf`);
+      // jsPDF.save() handles the download internally — no manual link needed
     } catch (error) {
       console.error('Error exporting PDF:', error);
       alert('Failed to export PDF. Please try again.');

@@ -3,6 +3,12 @@ import ProcessCard from "./ProcessCard";
 import ConnectorWT from "./ConnectorWT";
 
 const VSMFlow = ({ processes, highestCT, onDrillDown }) => {
+  // Only the FIRST process with the highest CT gets the bottleneck badge.
+  // Guard: if highestCT === 0 (all processes have CT=0), no bottleneck is shown.
+  const bottleneckIndex = highestCT > 0
+    ? processes.findIndex(p => Number(p.ct) === highestCT)
+    : -1;
+
   return (
     <div className="flex flex-row items-center py-6 overflow-x-auto gap-0 min-h-[300px] px-8 w-full">
       {processes.map((process, index) => (
@@ -17,7 +23,7 @@ const VSMFlow = ({ processes, highestCT, onDrillDown }) => {
 
           <ProcessCard
             process={process}
-            isBottleneck={process.ct === highestCT}
+            isBottleneck={index === bottleneckIndex}
             onClick={onDrillDown}
           />
         </React.Fragment>
