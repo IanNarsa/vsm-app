@@ -4,15 +4,23 @@ import { Plus, Trash2 } from 'lucide-react';
 export default function FormInput({ processes, addProcess, removeProcess, updateProcess, handleManageChildren }) {
   return (
     <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 h-full">
-      <div className="flex justify-between items-center mb-5 border-b border-gray-100 pb-4">
-        <h2 className="text-lg font-bold text-gray-800 whitespace-nowrap">Process Steps</h2>
-        <button
-          onClick={addProcess}
-          className="flex items-center justify-center gap-1.5 bg-blue-600 text-white px-1.5 py-1.5 rounded-md hover:bg-blue-700 transition whitespace-nowrap text-sm font-medium shadow-sm"
-        >
-          <Plus size={16} />
-          Add Process
-        </button>
+      <div className="flex flex-col gap-3 mb-5 border-b border-gray-100 pb-4">
+
+        {/* Baris 1: Judul (Full Width) */}
+        <div className="w-full">
+          <h2 className="text-2xl font-bold text-gray-800">
+            Process Steps
+          </h2>
+        </div>
+        <div className="w-full">
+          <button
+            onClick={addProcess}
+            className="flex items-center justify-center gap-1.5 bg-blue-600 text-white w-full py-2.5 rounded-md hover:bg-blue-700 transition text-sm font-medium shadow-sm"
+          >
+            <Plus size={18} />
+            Add Process
+          </button>
+        </div>
       </div>
 
       <div className="space-y-4 max-h-[550px] overflow-y-auto pr-2">
@@ -36,8 +44,8 @@ export default function FormInput({ processes, addProcess, removeProcess, update
               <button
                 onClick={() => handleManageChildren(process)}
                 className={`w-full px-2.5 py-2 text-xs font-bold rounded-md border transition-colors shadow-sm text-center
-                  ${process.hasChildren 
-                    ? 'bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100' 
+                  ${process.hasChildren
+                    ? 'bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100'
                     : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`}
                 title={process.hasChildren ? "Manage detailed flow (Drill Down)" : "Add sub-processes (Enable Drill Down)"}
               >
