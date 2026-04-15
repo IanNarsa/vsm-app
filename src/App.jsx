@@ -3,6 +3,7 @@ import FormInput from './components/FormInput';
 import CalculationEngine from './components/CalculationEngine';
 import VSMFlow from './components/VSMFlow';
 import ExportButton from './components/ExportButton';
+import SEO from './components/SEO';
 import { vsmDummyData } from './data/vsmData';
 
 function App() {
@@ -115,16 +116,21 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 md:px-8">
+      <SEO
+        title="FlowLean — Free Online Value Stream Mapping Tool"
+        description="Build, visualize, and analyze Value Stream Maps (VSM) online. FlowLean is a free Lean Manufacturing tool for process flow analysis, Lead Time calculation, and waste elimination."
+        url="https://flow-lean.com/"
+      />
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* Header Section */}
-        <div className="flex justify-between items-end">
+        <header className="flex justify-between items-end">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Lean VSM Builder</h1>
             <p className="text-gray-500 mt-1">Multi-Layer Value Stream Mapping Tool</p>
           </div>
           <ExportButton canvasRef={canvasRef} />
-        </div>
+        </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           
@@ -150,7 +156,7 @@ function App() {
                 <div className="w-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                     {/* Navigation Bar inside Canvas */}
                     <div className="bg-gray-50 border-b border-gray-100 p-4 rounded-t-xl flex justify-between items-center">
-                        <nav className="flex items-center text-sm font-medium text-gray-500 flex-wrap">
+                        <nav aria-label="VSM layer breadcrumb" className="flex items-center text-sm font-medium text-gray-500 flex-wrap">
                           {buildBreadcrumbs().map((item, index, arr) => {
                             const isLast = index === arr.length - 1;
                             return (
@@ -171,6 +177,7 @@ function App() {
                         {activePathIds.length > 1 && (
                             <button
                                 onClick={handleBack}
+                                aria-label="Go back to parent process layer"
                                 className="no-export flex items-center text-sm font-semibold text-gray-700 bg-white border border-gray-300 hover:bg-gray-100 px-3 py-1.5 rounded transition shadow-sm"
                             >
                                 <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -195,5 +202,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;

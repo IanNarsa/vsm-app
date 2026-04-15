@@ -155,6 +155,7 @@ export default function ExportButton({ canvasRef }) {
       <button
         onClick={exportPNG}
         disabled={isExporting}
+        aria-label="Download VSM diagram as PNG image"
         className="flex items-center gap-2 bg-slate-800 text-white px-5 py-2.5 rounded-xl hover:bg-slate-900 transition-all font-medium disabled:opacity-50 shadow-sm hover:shadow-md active:scale-95"
       >
         <FileImage size={18} />
@@ -164,6 +165,7 @@ export default function ExportButton({ canvasRef }) {
       <button
         onClick={exportPDF}
         disabled={isExporting}
+        aria-label="Download VSM diagram as PDF document"
         className="flex items-center gap-2 bg-rose-600 text-white px-5 py-2.5 rounded-xl hover:bg-rose-700 transition-all font-medium disabled:opacity-50 shadow-sm hover:shadow-md active:scale-95"
       >
         <FileText size={18} />
