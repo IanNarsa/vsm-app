@@ -91,7 +91,7 @@ function App() {
     if (processes.length === 0) return;
     if (processes.length === prevProcessCount.current) return;
     prevProcessCount.current = processes.length;
-    const vaCount  = processes.filter(p => p.isVA).length;
+    const vaCount = processes.filter(p => p.isVA).length;
     const nvaCount = processes.length - vaCount;
     trackGenerateVSM({ totalProcesses: processes.length, totalVA: vaCount, totalNVA: nvaCount });
   }, [processes.length]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -168,8 +168,8 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 md:px-8">
       <SEO
-        title="FlowLean — Free Online Value Stream Mapping Tool"
-        description="Build, visualize, and analyze Value Stream Maps (VSM) online. FlowLean is a free Lean Manufacturing tool for process flow analysis, Lead Time calculation, and waste elimination."
+        title="FlowLean — Value Stream Mapping & Bottleneck Analysis Tool"
+        description="Identify bottlenecks, reduce delays, and improve process flow in minutes. FlowLean helps you visualize workflows, analyze lead time, and uncover hidden inefficiencies—without complex tools or setup."
         url="https://flow-lean.com/"
       />
       <div className="max-w-7xl mx-auto space-y-8">
